@@ -1,0 +1,56 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cctype> // Для функції toupper
+
+// Функція для перетворення всіх літер рядка у заголовні
+std::string toUpper(const std::string& str) {
+    std::string result = str;
+    for (char& c : result) {
+        c = std::toupper(c);
+    }
+    return result;
+}
+
+// Функція для перевірки, чи рядок задовольняє умовам завдання
+bool satisfiesConditions(const std::string& str) {
+    for (char c : str) {
+        if (!std::isalpha(c)) { // Якщо символ не є літерою
+            return false;
+        }
+    }
+    return true;
+}
+
+int main() {
+    std::ifstream inputFile("input.txt"); // Вхідний текстовий файл
+    std::ofstream outputFile("output.txt"); // Вихідний текстовий файл
+
+    if (!inputFile.is_open()) {
+        std::cerr << "Помилка відкриття вхідного файлу!" << std::endl;
+        return 1;
+    }
+
+    if (!outputFile.is_open()) {
+        std::cerr << "Помилка відкриття вихідного файлу!" << std::endl;
+        return 1;
+    }
+
+    std::string line;
+    while (std::getline(inputFile, line)) {
+        // Виконуємо перевірку та перетворення рядка
+        if (satisfiesConditions(line)) {
+            std::string processedLine = toUpper(line);
+            outputFile << processedLine << std::endl;
+        } else {
+            std::cerr << "Рядок не задовольняє умовам завдання: " << line << std::endl;
+        }
+    }
+
+    inputFile.close();
+    outputFile.close();
+
+    std::cout << "Обробка завершена. Результати записані у вихідний файл." << std::endl;
+
+    return 0;
+}
