@@ -1,0 +1,50 @@
+#include <iostream>
+
+size_t my_rfind(const char* str, size_t pos, size_t n, char ch) {
+    // Перевірка вхідних параметрів
+    if (str == nullptr)
+        return std::string::npos;
+
+    // Починаємо з кінця рядка
+    size_t len = 0;
+    while (str[len] != '\0')
+        len++;
+
+    if (pos > len)
+        return std::string::npos;
+
+    // Починаємо з останнього символа перед pos
+    size_t start = (pos == std::string::npos || pos >= len) ? len - 1 : pos;
+
+    // Шукаємо в зворотньому порядку
+    for (size_t i = start; i != std::string::npos; i--) {
+        // Якщо знайдено потрібний символ, почати порівняння з підрядком
+        if (str[i] == ch) {
+            bool found = true;
+            for (size_t j = 0; j < n; j++) {
+                if (i - j < 0 || str[i - j] != str[len - n + j]) {
+                    found = false;
+                    break;
+                }
+            }
+            if (found)
+                return i - n + 1;
+        }
+    }
+    
+    return std::string::npos;
+}
+
+int main() {
+    // Введення рядка
+    char input[100];
+    std::cout << "Введіть рядок: ";
+    std::cin.getline(input, 100);
+
+    // Пошук
+    std::string str(input);
+    std::cout << "Результат методу string::rfind: " << str.rfind("str", std::string::npos, 3) << std::endl;
+    std::cout << "Результат власної функції: " << my_rfind(input, std::string::npos, 3, 's') << std::endl;
+
+    return 0;
+}
